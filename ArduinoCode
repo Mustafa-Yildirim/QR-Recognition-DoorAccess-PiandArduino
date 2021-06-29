@@ -1,0 +1,94 @@
+//Servo motor controls
+#include <Servo.h>
+Servo myservo;   // create servo object to control
+int va1 = 0;  // initial condition of servo
+
+//Ultrasonic sensor
+const int trigPin = 9;
+const int echoPin = 10;
+long duration; 
+int distance_in_cm; 
+
+// Serial String 
+bool stringComplete = false; // #1
+String inputString; // #1
+const String Open = "Calvin\n"; 
+const String Open1 = "Aaron\n";  
+const String Open2 = "Mustafa\n";  
+
+// photoresistor setup
+const int pResistor = A0;
+int photoResistorValue; // store value of photoresistor (0-1023)
+
+void setup() {
+  myservo.attach(8); // attaches the servo on pin 9 to the servo
+  pinMode(trigPin,OUTPUT); // ultrasonic sensor
+  pinMode(echoPin,INPUT);
+  Serial.begin(9600);
+  
+  // photoresistor
+  pinMode(pResistor, INPUT);
+  
+  pinMode(13,OUTPUT);
+  digitalWrite(13,LOW);
+  
+}
+
+void loop() {
+  digitalWrite(trigPin,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin,LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance_in_cm = duration*0.034/2;
+  Dectection();
+  delay(1000);
+}
+
+void Dectection()
+{
+ if (distance_in_cm <= 50) 
+  Serial.println("Person Detected");
+  Serial.println(distance_in_cm);
+  while(!stringComplete)
+  serialEvent();
+  stringComplete = false;
+  if (inputString == Open) // Calvin
+    openDoor();
+  else if (inputString == Open1) // Aaron
+    openDoor();
+  else if (inputString == Open2) // Mustafa
+    openDoor();  
+  else 
+    closeDoor();
+  inputString = "";
+}
+
+void openDoor()
+{
+  myservo.write(100); // angle to open door to
+  delay(2000);
+}
+
+void closeDoor()
+{
+  myservo.write(0);
+  if (photoResistorValue > 25)
+  {
+    delay(2000);
+    myservo.write(0);
+   } 
+}
+
+void serialEvent() // #1
+{
+    while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    inputString += inChar;
+    if (inChar == '\n') {
+      stringComplete = true;
+    }
+  }
+}
+
