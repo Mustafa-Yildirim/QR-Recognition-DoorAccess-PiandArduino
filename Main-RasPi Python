@@ -1,0 +1,28 @@
+import QrCode as function
+import serial
+import time
+from picamera import PiCamera
+
+camera = PiCamera()
+port = '/dev/ttyACM1'
+
+ser = serial.Serial(port,9600)
+time.sleep(3)
+inputValue =b''
+
+while True:
+    while ser.inWaiting() > 0:
+        inputValue += ser.read(1)
+    if b'\n' in inputValue:
+        print('InputValue: ',inputValue)
+        if b'Person Detected' in inputValue:
+            data = function.captureQR(camera)
+            print('Data: ', data)
+            if data is None:
+                ser.write(b'No Codes Detected\n')
+            else:
+                ser.write(data + b'\n')
+        else:
+            ser.write(b'Invalid Input String\n')
+            print("invalid input string\n")
+        inputValue = b''        
