@@ -18,3 +18,12 @@ Then Pi camera scans the QR badge and sends the data to Arduino.
 If the badge belongs to one of the authorized users defined in Arduino's memory, Arduino activates the servo motor to open the door. 
 When person passed by the door and went inside, ultrasonic sensor will sense nobody present at the door, and photoresistor will sense a light value more than the limit it is set to. That light value indicates door is still open and ultrasonic sensor senses no one, After 2 seconds delay, photoresistor condition will lead servo to close the door.
 
+References
+
+#1  https://electropeak.com/learn/smart-door-lock-w-wifi-login-page-by-arduino-esp8266/
+#2 	https://github.com/tz1/qrduino
+#3 	https://stackoverflow.com/questions/2489048/qr-code-encoding-and-decoding-using-zxing)
+#4	https://classes.engineering.wustl.edu/ese205/core/index.php?title=Serial_Communication_between_Raspberry_Pi_%26_Arduino
+
+
+
